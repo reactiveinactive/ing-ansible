@@ -1,0 +1,14 @@
+- name: Create a xfs filesystem on /dev/sdb
+  filesystem:
+    fstype: xfs
+    dev: /dev/sdb
+
+- name: Mount /data
+  mount:
+    path: /usr/share/nginx/html/
+    src: /dev/sdb
+    fstype: xfs
+    state: mounted
+
+- yum:
+    name: wget

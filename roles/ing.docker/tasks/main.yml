@@ -48,26 +48,3 @@
 
 - name: docker started
   service: name=docker state=started enabled=yes
-
-- name: install epel-release
-  yum:
-    name: epel-release
-
-- name: install pip
-  yum:
-    name: python-pip
-
-- name: install docker-py
-  pip:
-    name: docker-py
-
-- name: Create a docker registry
-  docker_container:
-    name: registry
-    image: registry:2
-    state: started
-    restart: yes
-    volumes:
-      - /data:/var/lib/registry
-    ports:
-      - 5000:5000

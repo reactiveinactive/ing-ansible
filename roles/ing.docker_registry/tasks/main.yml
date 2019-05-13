@@ -1,0 +1,21 @@
+- name: install epel-release
+  yum:
+    name: epel-release
+
+- name: install pip
+  yum:
+    name: python-pip
+
+- name: install docker-py
+  pip:
+    name: docker-py
+
+- name: Create a docker registry
+  docker_container:
+    name: registry
+    image: registry:2
+    state: started
+    volumes:
+      - /data:/var/lib/registry
+    ports:
+      - 5000:5000

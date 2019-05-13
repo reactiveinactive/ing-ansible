@@ -1,0 +1,4 @@
+nginx_vhosts:
+  - listen: "80 default_server"
+    server_name: "build-archives"
+    root: "/usr/share/nginx/html/"

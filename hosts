@@ -1,2 +1,5 @@
 [docker_registry]
 docker-registry
+
+[archives]
+build-archives

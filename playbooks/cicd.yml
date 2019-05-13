@@ -2,3 +2,8 @@
   roles:
     - ing.docker
     - ing.docker_registry
+
+- hosts: archives
+  roles:
+    - geerlingguy.nginx
+    - ing.archives
