@@ -1,0 +1,4 @@
+- hosts: docker_registry
+  roles:
+    - ing.docker
+    - ing.docker_registry

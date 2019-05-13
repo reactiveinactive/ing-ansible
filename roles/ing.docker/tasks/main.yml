@@ -1,0 +1,73 @@
+- name: Create a xfs filesystem on /dev/sdb
+  filesystem:
+    fstype: xfs
+    dev: /dev/sdb
+
+- name: Mount /var/lib/docker
+  mount:
+    path: /var/lib/docker
+    src: /dev/sdb
+    fstype: xfs
+    state: mounted
+
+- name: Create a xfs filesystem on /dev/sdc
+  filesystem:
+    fstype: xfs
+    dev: /dev/sdc
+
+- name: Mount /data
+  mount:
+    path: /data
+    src: /dev/sdc
+    fstype: xfs
+    state: mounted
+
+- name: Add docker repository
+  yum_repository:
+    name: docker-ce
+    description: Docker CE Stable - $basearch
+    baseurl: https://download.docker.com/linux/centos/7/$basearch/stable
+    gpgcheck: yes
+    gpgkey: https://download.docker.com/linux/centos/gpg
+
+- name: install docker
+  package:
+    name: docker-ce
+    state: present
+
+- file:
+    name: /etc/docker
+    state: directory
+    mode: 0755
+
+- name: copy daemon file
+  copy:
+    src: "{{ files_path }}/daemon.json"
+    dest: /etc/docker/daemon.json
+    mode: 0644
+
+- name: docker started
+  service: name=docker state=started enabled=yes
+
+- name: install epel-release
+  yum:
+    name: epel-release
+
+- name: install pip
+  yum:
+    name: python-pip
+
+- name: install docker-py
+  pip:
+    name: docker-py
+
+- name: Create a docker registry
+  docker_container:
+    name: registry
+    image: registry:2
+    state: started
+    restart: yes
+    volumes:
+      - /data:/var/lib/registry
+    ports:
+      - 5000:5000
