@@ -1,0 +1,52 @@
+- name: Add Kubernetes repository
+  yum_repository:
+    name: kubernetes
+    description: Kubernetes
+    baseurl: https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+    gpgcheck: yes
+    gpgkey: 
+      - https://packages.cloud.google.com/yum/doc/yum-key.gpg
+      - https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+    repo_gpgcheck: yes
+
+- name: copy sysctl files
+  copy:
+    src: "{{ files_path }}/k8s.conf"
+    dest: "/etc/sysctl.d/k8s.conf"
+    remote_src: no
+  register: sysctl
+
+- name: run sysctl
+  command: sysctl --system
+  when: sysctl.changed
+
+- name: Remove swapfile from /etc/fstab
+  mount:
+    name: "swap"
+    fstype: swap
+    state: absent
+
+- name: Disable swap
+  command: swapoff -a
+  when: ansible_swaptotal_mb > 0
+
+- name: Create a xfs filesystem on /dev/sdc
+  filesystem:
+    fstype: xfs
+    dev: /dev/sdc
+
+- name: Mount /var/lib/kubelet/
+  mount:
+    path: /var/lib/kubelet/
+    src: /dev/sdc
+    fstype: xfs
+    state: mounted
+
+- name: install kube packages
+  package:
+    name: "{{item}}"
+    state: present
+  with_items: "{{kube_packages}}"
+
+- name: kubelet started
+  service: name=kubelet state=started enabled=yes

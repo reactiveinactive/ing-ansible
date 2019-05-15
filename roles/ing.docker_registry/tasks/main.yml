@@ -1,3 +1,15 @@
+- name: Create a xfs filesystem on /dev/sdc
+  filesystem:
+    fstype: xfs
+    dev: /dev/sdc
+
+- name: Mount /data
+  mount:
+    path: /data
+    src: /dev/sdc
+    fstype: xfs
+    state: mounted
+
 - name: install epel-release
   yum:
     name: epel-release

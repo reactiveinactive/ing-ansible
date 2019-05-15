@@ -1,0 +1,12 @@
+---
+- hosts: kubernetes_masters
+  roles:
+    - ing.docker
+    - ing.kubernetes.install 
+    - ing.kubernetes.master
+
+- hosts: kubernetes_nodes
+  roles:
+    - ing.docker
+    - ing.kubernetes.install
+    - ing.kubernetes.node

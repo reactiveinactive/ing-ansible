@@ -3,3 +3,15 @@ docker-registry
 
 [archives]
 build-archives
+
+[consul_instances]
+consul consul_iface=ens160 consul_node_role=bootstrap
+consul-server1 consul_iface=ens160 consul_node_role=server
+consul-server2 consul_iface=ens160 consul_node_role=server
+
+[kubernetes_masters]
+#kpo-kube-admin.lab.intranet
+
+[kubernetes_nodes]
+kpo-kube-node2.lab.intranet
+kpo-kube-node3.lab.intranet

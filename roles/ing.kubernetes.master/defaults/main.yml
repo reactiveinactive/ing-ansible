@@ -1,0 +1,3 @@
+local_ip: "{{hostvars[inventory_hostname]['ansible_default_ipv4']['address']}}"
+files_path: "{{ role_path }}/files"
+files_kubernetes_path: "/opt/kubernetes/yaml"

@@ -10,18 +10,6 @@
     fstype: xfs
     state: mounted
 
-- name: Create a xfs filesystem on /dev/sdc
-  filesystem:
-    fstype: xfs
-    dev: /dev/sdc
-
-- name: Mount /data
-  mount:
-    path: /data
-    src: /dev/sdc
-    fstype: xfs
-    state: mounted
-
 - name: Add docker repository
   yum_repository:
     name: docker-ce

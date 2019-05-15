@@ -1,0 +1,11 @@
+- name: Create a xfs filesystem on /dev/sdc
+  filesystem:
+    fstype: xfs
+    dev: /dev/sdb
+
+- name: Mount /data
+  mount:
+    path: /data
+    src: /dev/sdb
+    fstype: xfs
+    state: mounted

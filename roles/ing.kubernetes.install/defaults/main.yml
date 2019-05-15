@@ -1,0 +1,6 @@
+kube_packages:
+  - kubelet
+  - kubeadm
+  - kubectl
+
+files_path: "{{ role_path }}/files"

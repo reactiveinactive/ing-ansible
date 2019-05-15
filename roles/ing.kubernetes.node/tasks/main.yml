@@ -1,0 +1,14 @@
+- name: Check that the node has joined a cluster
+  stat:
+    path: /etc/kubernetes/bootstrap-kubelet.conf
+  register: stat_result
+
+- name: Generate join command
+  command: kubeadm token create --print-join-command
+  delegate_to: kpo-kube-admin
+  register: join_command
+  when: stat_result.stat.exists == False
+
+- name: Join the node to cluster
+  command: "{{join_command.stdout_lines[0]}}"
+  when: stat_result.stat.exists == False

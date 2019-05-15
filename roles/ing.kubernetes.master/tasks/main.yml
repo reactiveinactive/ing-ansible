@@ -1,0 +1,51 @@
+- name: install pip setuptools
+  pip:
+    name:
+      - setuptools
+      - ipaddress
+      - PyYAML
+    state: latest
+#    extra_args: --upgrade --ignore-installed
+
+- name: install pip openshift
+  pip:
+     name: openshift
+
+- name: Initialize the Kubernetes cluster using kubeadm
+  command: kubeadm init --apiserver-advertise-address="{{local_ip}}" --apiserver-cert-extra-sans="{{local_ip}}"  --node-name k8s-master --pod-network-cidr=10.244.0.0/16
+  args:
+    creates: /etc/kubernetes/manifests/kube-apiserver.yaml
+
+- file:
+    path: "{{ item }}"
+    state: directory
+  with_items: 
+    - /root/.kube
+    - "{{ files_kubernetes_path }}"
+
+- name: Setup kubeconfig for root
+  command: "cp -i /etc/kubernetes/admin.conf /root/.kube/config"
+  args:
+    creates: /root/.kube/config
+
+- name: copy files to admin
+  copy:
+    src: "{{ files_path }}/kube-flannel.yml"
+    dest: "{{ files_kubernetes_path }}/kube-flannel.yml"
+    remote_src: no
+
+- name: copy files to admin
+  copy:
+    src: "{{ files_path }}/kubernetes-dashboard.yaml"
+    dest: "{{ files_kubernetes_path }}/kubernetes-dashboard.yaml"
+    remote_src: no
+
+- name: Install calico pod network
+  k8s:
+    state: present
+    src: "{{ files_kubernetes_path }}/kube-flannel.yml"
+
+- name: Install kubernetes dashboard
+  k8s:
+    state: present
+    src: "{{ files_kubernetes_path }}/kubernetes-dashboard.yaml"
