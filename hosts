@@ -11,7 +11,11 @@ consul-server2 consul_iface=ens160 consul_node_role=server
 
 [kubernetes_masters]
 #kpo-kube-admin.lab.intranet
+stable-kube-master
 
 [kubernetes_nodes]
-kpo-kube-node2.lab.intranet
-kpo-kube-node3.lab.intranet
+#kpo-kube-node2.lab.intranet kube_master=kpo-kube-admin.lab.intranet
+#kpo-kube-node3.lab.intranet kube_master=kpo-kube-admin.lab.intranet
+stable-kube-node1 kube_master=stable-kube-master
+stable-kube-node2 kube_master=stable-kube-master
+stable-kube-node3 kube_master=stable-kube-master

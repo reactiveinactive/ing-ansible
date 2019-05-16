@@ -1,3 +1,11 @@
+- name: install pip
+  yum:
+    name: epel-release
+
+- name: install pip
+  yum:
+    name: python-pip
+
 - name: install pip setuptools
   pip:
     name:
